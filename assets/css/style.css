@@ -1,0 +1,40 @@
+:root {
+    --main-theme: #44B5FC;
+    --border-radius: 30px;
+
+    --dark-text: white;
+    --light-text: black;
+}
+
+body {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+h1 {
+    font-size: 3em;
+    margin-bottom: 0;
+    color: var(--main-theme);
+}
+
+h2 {
+    text-align: center;
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 100px;
+}
+
+button {
+    background-color: var(--main-theme);
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 10px 30px;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+}
+
