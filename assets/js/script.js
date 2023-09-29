@@ -1,24 +1,22 @@
+var subtitle = document.getElementById("subtitle");
 var startButton = document.getElementById("button-start-quiz");
 var quiz = document.getElementById("container-quiz");
+var timer = document.getElementById("timer");
 var h3El = quiz.querySelector("h3");
 var olEl = quiz.querySelector("ol");
 var li1Answer = document.createElement("li"); // Create a list item
 var li1Button = document.createElement("button"); // Create a button
-li1Answer.appendChild(li1Button); // Attach the button to the list item for the user to click
 
 var li2Answer = document.createElement("li");
 var li2Button = document.createElement("button");
-li2Answer.appendChild(li2Button);
 
 var li3Answer = document.createElement("li");
 var li3Button = document.createElement("button");
-li3Answer.appendChild(li3Button);
 
 var li4Answer = document.createElement("li");
 var li4Button = document.createElement("button");
-li4Answer.appendChild(li4Button);
 
-
+const SUBTRACT_TIME = 10;
 var questionIndex = 0;
 const QUESTIONS = {
     0: "String values must be enclosed by a pair of ______",
@@ -122,32 +120,43 @@ function setupQuestion() {
 function startGame(event) {
     event.stopPropagation();
 
-    document.getElementById("title-screen").style.visibility = "hidden"; // Hide the title screen when the game starts
-    document.getElementById("container-quiz").setAttribute("style", "display: flex; flex-direction: column; margin: 0 auto; text-align: start; width: 50%;")
+    var seconds = 90;
+    timer.innerHTML = "Time: " + seconds;
+    timer.setAttribute("style", "font-size: 30px; margin: 10px auto; border: 2px solid black; border-radius: 10px; padding: 10px;");
+    
+    var gameTimer = setInterval(() => {
+
+        if (seconds === 0) {
+            alert("game over!")
+            clearInterval(gameTimer);
+            return;
+        }
+        seconds--;
+        timer.innerHTML = "Time: " + seconds;
+    }, 1000);
+
+    document.getElementById("title-screen").style.display = "none"; // Hide the title screen when the game starts
+    document.getElementById("container-quiz").setAttribute("style", "display: flex; flex-direction: column; margin: 0 auto; text-align: start; width: 70%;")
 
     setupQuestion();
     olEl.append(li1Answer, li2Answer, li3Answer, li4Answer);
 }
 
-function onButtonClick(event) {
+function onAnswerClick(event) {
     // console.log(event);
-    
 
     var userAnswer = event.target.textContent;
     var quizAnswer = getQuizAnswer();
-    // console.log("userAnswer:", userAnswer);
-    // console.log("quizAnswer:", quizAnswer);
 
-    var hr = document.createElement("hr");
-    var resultText = document.createElement("p");
+    var resultText = document.createElement("h3");
+
+    olEl.children[olEl.children.length - 1].appendChild(resultText);
 
     if (userAnswer == quizAnswer) {
-        resultText.textContent = "Correct!";
+        olEl.children[olEl.children.length - 1].children[1].textContent = "Correct!";
     } else {
-        resultText.textContent = "Incorrect";
+        olEl.children[olEl.children.length - 1].children[1].textContent = "Incorrect";
     }
-
-    olEl.append(hr, resultText);
 }
 
 // Todo?
@@ -178,10 +187,23 @@ function getQuizAnswer() {
     return ANSWERS[QUESTIONS[questionIndex]];
 }
 
+function initVariables() {
+    subtitle.innerHTML = "You'll have 90 seconds to answer all  questions. Getting questions wrong will subtract the time by " + SUBTRACT_TIME + " seconds.<br>Good luck and have fun!";
 
+    timer.setAttribute("style", "display: none;");
+
+    li1Answer.appendChild(li1Button); // Attach the button to the list item for the user to click
+    li2Answer.appendChild(li2Button);
+    li3Answer.appendChild(li3Button);
+    li4Answer.appendChild(li4Button);
+}
+
+
+
+initVariables();
 startButton.addEventListener("click", startGame);
 // document.addEventListener("keypress", onKeydownAction); // Allow numbers to be used to answer questions
-li1Button.addEventListener("click", onButtonClick);
-li2Button.addEventListener("click", onButtonClick);
-li3Button.addEventListener("click", onButtonClick);
-li4Button.addEventListener("click", onButtonClick);
+li1Button.addEventListener("click", onAnswerClick);
+li2Button.addEventListener("click", onAnswerClick);
+li3Button.addEventListener("click", onAnswerClick);
+li4Button.addEventListener("click", onAnswerClick);
