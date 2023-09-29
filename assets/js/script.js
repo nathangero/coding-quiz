@@ -126,6 +126,7 @@ function startGame(event) {
 
     timer.innerHTML = "Time: " + seconds;
     timer.setAttribute("style", "font-size: 30px; margin: 10px auto; border: 2px solid black; border-radius: 10px; padding: 10px;");
+    timer.appendChild(penalty);
     
     var gameTimer = setInterval(() => {
         if (seconds === 0) {
@@ -201,17 +202,27 @@ function handleIncorrectAnswer() {
     }
     console.log("user score:", userScore);
 
-    seconds -= SUBTRACT_TIME; // Penalize the user 
-    penalty.setAttribute("style", "visibility: visible;");
+    var futureTime = seconds - SUBTRACT_TIME;
+    if (futureTime <= 0) {
+        seconds = 0;
+        timer.innerHTML = "Time: " + seconds;
+        return;
+    }
 
-    var penaltySeconds = 2; // Show penality for 2 seconds
+    seconds -= SUBTRACT_TIME; // Penalize the user 
+    // penalty.style.visibility = "visible";
+
+    
+    timer.style.color = "red";
+    var penaltySeconds = 1; // Show penality for 1 seconds
     var penaltyTimer = setInterval(() => {
         if (penaltySeconds === 0) {
             clearInterval(penaltyTimer);
+            timer.style.color = "black";
             penalty.setAttribute("style", "visibility: hidden")
         }
         penaltySeconds--;
-    }, 1000);
+    }, 700);
 }
 
 function getQuizAnswer() {
@@ -232,9 +243,8 @@ function initVariables() {
     subtitle.innerHTML = "You'll have 90 seconds to answer all  questions. Getting questions wrong will subtract the time by " + SUBTRACT_TIME + " seconds.<br>Good luck and have fun!";
 
     timer.setAttribute("style", "display: none;");
-    penalty.setAttribute("style", "visibility: hidden; color: red;");
+    penalty.setAttribute("style", "display: none; color: red;");
     penalty.textContent = "-" + SUBTRACT_TIME;
-    timer.appendChild(penalty);
 
     console.log(timer)
     console.log(penalty)
