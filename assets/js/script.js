@@ -1,23 +1,8 @@
-var subtitle = document.getElementById("subtitle");
-var startButton = document.getElementById("button-start-quiz");
-var quiz = document.getElementById("container-quiz");
-var timer = document.getElementById("timer");
-var h3El = quiz.querySelector("h3");
-var olEl = quiz.querySelector("ol");
-var li1Answer = document.createElement("li"); // Create a list item
-var li1Button = document.createElement("button"); // Create a button
-
-var li2Answer = document.createElement("li");
-var li2Button = document.createElement("button");
-
-var li3Answer = document.createElement("li");
-var li3Button = document.createElement("button");
-
-var li4Answer = document.createElement("li");
-var li4Button = document.createElement("button");
-
+/* CONST VARIABLES */
 const SUBTRACT_TIME = 10;
-var questionIndex = 0;
+const SCORE_INCREASE = 10;
+const SCORE_DECREASE = 10;
+
 const QUESTIONS = {
     0: "String values must be enclosed by a pair of ______",
     1: "True or False: \n<pre><code>addEventListener(\"click\", runFunction);</code></pre> is valid.",
@@ -107,18 +92,35 @@ const MULTIPLE_CHOICE = {
     },
 }
 
-function setupQuestion() {
-    var question = QUESTIONS[questionIndex]
 
-    h3El.textContent = question
-    li1Button.textContent = MULTIPLE_CHOICE[question].ANS_ONE;
-    li2Button.textContent = MULTIPLE_CHOICE[question].ANS_TWO;
-    li3Button.textContent = MULTIPLE_CHOICE[question].ANS_THREE;
-    li4Button.textContent = MULTIPLE_CHOICE[question].ANS_FOUR;
-}
+/* DOM VARIABLES */
+var subtitle = document.getElementById("subtitle");
+var startButton = document.getElementById("button-start-quiz");
+var quiz = document.getElementById("container-quiz");
+var timer = document.getElementById("timer");
+var h3El = quiz.querySelector("h3");
+var olEl = quiz.querySelector("ol");
+var li1Answer = document.createElement("li"); // Create a list item
+var li1Button = document.createElement("button"); // Create a button
 
+var li2Answer = document.createElement("li");
+var li2Button = document.createElement("button");
+
+var li3Answer = document.createElement("li");
+var li3Button = document.createElement("button");
+
+var li4Answer = document.createElement("li");
+var li4Button = document.createElement("button");
+
+
+/* GLOBAL VARIABLES */
+var userScore = 0;
+var questionIndex = 0;
+
+/* EVENT LISTENER FUNCTIONS */
 function startGame(event) {
     event.stopPropagation();
+    questionIndex = 0; // Reset to 0 when a new game starts
 
     var seconds = 90;
     timer.innerHTML = "Time: " + seconds;
@@ -183,6 +185,19 @@ function onAnswerClick(event) {
 //     }
 // }
 
+/* HELPER FUNCTIONS */
+
+function setupQuestion() {
+    var question = QUESTIONS[questionIndex]
+
+    h3El.textContent = question
+    li1Button.textContent = MULTIPLE_CHOICE[question].ANS_ONE;
+    li2Button.textContent = MULTIPLE_CHOICE[question].ANS_TWO;
+    li3Button.textContent = MULTIPLE_CHOICE[question].ANS_THREE;
+    li4Button.textContent = MULTIPLE_CHOICE[question].ANS_FOUR;
+}
+
+
 function getQuizAnswer() {
     return ANSWERS[QUESTIONS[questionIndex]];
 }
@@ -199,7 +214,7 @@ function initVariables() {
 }
 
 
-
+/* RUN ON SITE STARTUP */
 initVariables();
 startButton.addEventListener("click", startGame);
 // document.addEventListener("keypress", onKeydownAction); // Allow numbers to be used to answer questions

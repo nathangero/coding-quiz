@@ -18,7 +18,7 @@ main {
 h1 {
     font-size: 3em;
     margin-bottom: 0;
-    color: var(--main-theme);
+    color: var(--light-text);
 }
 
 h2 {
