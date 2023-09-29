@@ -98,6 +98,7 @@ var subtitle = document.getElementById("subtitle");
 var startButton = document.getElementById("button-start-quiz");
 var quiz = document.getElementById("container-quiz");
 var timer = document.getElementById("timer");
+var penalty = document.createElement("p");
 var h3El = quiz.querySelector("h3");
 var olEl = quiz.querySelector("ol");
 var li1Answer = document.createElement("li"); // Create a list item
@@ -116,18 +117,17 @@ var li4Button = document.createElement("button");
 /* GLOBAL VARIABLES */
 var userScore = 0;
 var questionIndex = 0;
+var seconds = 90; // Global to adjust when user gets an answer wrong
 
 /* EVENT LISTENER FUNCTIONS */
 function startGame(event) {
     event.stopPropagation();
     questionIndex = 0; // Reset to 0 when a new game starts
 
-    var seconds = 90;
     timer.innerHTML = "Time: " + seconds;
     timer.setAttribute("style", "font-size: 30px; margin: 10px auto; border: 2px solid black; border-radius: 10px; padding: 10px;");
     
     var gameTimer = setInterval(() => {
-
         if (seconds === 0) {
             alert("game over!")
             clearInterval(gameTimer);
@@ -155,8 +155,10 @@ function onAnswerClick(event) {
     olEl.children[olEl.children.length - 1].appendChild(resultText);
 
     if (userAnswer == quizAnswer) {
+        handleCorrectAnswer();
         olEl.children[olEl.children.length - 1].children[1].textContent = "Correct!";
     } else {
+        handleIncorrectAnswer();
         olEl.children[olEl.children.length - 1].children[1].textContent = "Incorrect";
     }
 }
@@ -187,6 +189,35 @@ function onAnswerClick(event) {
 
 /* HELPER FUNCTIONS */
 
+function handleCorrectAnswer() {
+    userScore += SCORE_INCREASE;
+    console.log("user score:", userScore);
+}
+
+function handleIncorrectAnswer() {
+    var futureScore = userScore - SCORE_DECREASE;
+    if (futureScore >= 0) { // Check if the user's score will go below 0 or not
+        userScore = futureScore;
+    }
+    console.log("user score:", userScore);
+
+    seconds -= SUBTRACT_TIME; // Penalize the user 
+    penalty.setAttribute("style", "visibility: visible;");
+
+    var penaltySeconds = 2; // Show penality for 2 seconds
+    var penaltyTimer = setInterval(() => {
+        if (penaltySeconds === 0) {
+            clearInterval(penaltyTimer);
+            penalty.setAttribute("style", "visibility: hidden")
+        }
+        penaltySeconds--;
+    }, 1000);
+}
+
+function getQuizAnswer() {
+    return ANSWERS[QUESTIONS[questionIndex]];
+}
+
 function setupQuestion() {
     var question = QUESTIONS[questionIndex]
 
@@ -197,15 +228,16 @@ function setupQuestion() {
     li4Button.textContent = MULTIPLE_CHOICE[question].ANS_FOUR;
 }
 
-
-function getQuizAnswer() {
-    return ANSWERS[QUESTIONS[questionIndex]];
-}
-
 function initVariables() {
     subtitle.innerHTML = "You'll have 90 seconds to answer all  questions. Getting questions wrong will subtract the time by " + SUBTRACT_TIME + " seconds.<br>Good luck and have fun!";
 
     timer.setAttribute("style", "display: none;");
+    penalty.setAttribute("style", "visibility: hidden; color: red;");
+    penalty.textContent = "-" + SUBTRACT_TIME;
+    timer.appendChild(penalty);
+
+    console.log(timer)
+    console.log(penalty)
 
     li1Answer.appendChild(li1Button); // Attach the button to the list item for the user to click
     li2Answer.appendChild(li2Button);
