@@ -131,17 +131,23 @@ function startGame(event) {
 
 function onButtonClick(event) {
     // console.log(event);
+    
 
     var userAnswer = event.target.textContent;
     var quizAnswer = getQuizAnswer();
-    console.log("userAnswer:", userAnswer);
-    console.log("quizAnswer:", quizAnswer);
+    // console.log("userAnswer:", userAnswer);
+    // console.log("quizAnswer:", quizAnswer);
+
+    var hr = document.createElement("hr");
+    var resultText = document.createElement("p");
 
     if (userAnswer == quizAnswer) {
-        alert("Correct!");
+        resultText.textContent = "Correct!";
     } else {
-        alert("Incorrect. Correct answer is: " + quizAnswer)
+        resultText.textContent = "Incorrect";
     }
+
+    olEl.append(hr, resultText);
 }
 
 // Todo?
