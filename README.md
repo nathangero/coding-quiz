@@ -7,3 +7,7 @@ Deployment link is found here: [https://nathangero.github.io/coding-quiz/](https
 ## Learning Points
 
 ## Credits
+
+### Resources
+
+[stopPropagation() definition](https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation)

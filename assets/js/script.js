@@ -6,8 +6,8 @@ const SCORE_DECREASE = 10;
 const QUESTIONS = {
     0: "String values must be enclosed by a pair of ______",
     1: "True or False: \n<pre><code>addEventListener(\"click\", runFunction);</code></pre> is valid.",
-    2: "What does this do",
-    3: "What does stevent.stopPropagation() do?",
+    2: "Which is a valid form of a for loop?",
+    3: "What does event.stopPropagation() do?",
     4: "Which CSS code changes the mouse cursor into a hand?",
     5: "Which is not true about a JavaScript Object?",
     6: "Which git command allows the user to add a comment to the commit?",
@@ -19,76 +19,76 @@ const QUESTIONS = {
 const ANSWERS = {
     [QUESTIONS[0]]: "\" \"",
     [QUESTIONS[1]]: "True",
-    [QUESTIONS[2]]: "",
-    [QUESTIONS[3]]: "",
-    [QUESTIONS[4]]: "",
-    [QUESTIONS[5]]: "",
-    [QUESTIONS[6]]: "",
-    [QUESTIONS[7]]: "",
-    [QUESTIONS[8]]: "",
-    [QUESTIONS[9]]: "",
+    [QUESTIONS[2]]: "<code>for (var i = 0; i < 10; i++) {}</code>",
+    [QUESTIONS[3]]: "prevents further propagation of the current event in the capturing and bubbling phases",
+    [QUESTIONS[4]]: "<code>cursor: pointer;</code>",
+    [QUESTIONS[5]]: "All options are TRUE",
+    [QUESTIONS[6]]: "<code>git commit -m \"\"</code>",
+    [QUESTIONS[7]]: "False",
+    [QUESTIONS[8]]: "<code>var myArr = []</code>",
+    [QUESTIONS[9]]: "<code>console.log()</code>",
 }
 
 const MULTIPLE_CHOICE = {
     [QUESTIONS[0]]: {
-        ANS_ONE: "\" \"",
+        ANS_ONE: ANSWERS[QUESTIONS[0]],
         ANS_TWO: "{ }",
         ANS_THREE: "( )",
         ANS_FOUR: "< >",
     },
     [QUESTIONS[1]]: {
-        ANS_ONE: "",
-        ANS_TWO: "",
+        ANS_ONE: ANSWERS[QUESTIONS[1]],
+        ANS_TWO: "False",
         ANS_THREE: "",
         ANS_FOUR: "",
     },
     [QUESTIONS[2]]: {
-        ANS_ONE: "",
-        ANS_TWO: "",
-        ANS_THREE: "",
-        ANS_FOUR: "",
+        ANS_ONE: ANSWERS[QUESTIONS[2]],
+        ANS_TWO: "<code>for (i < 10; i++) {}</code>",
+        ANS_THREE: "<code>forEach (var i = 0; i < 10; i++) {}</code>",
+        ANS_FOUR: "<code>for (var i = 0: i < 10: i++) {}</code>",
     },
     [QUESTIONS[3]]: {
-        ANS_ONE: "",
-        ANS_TWO: "",
-        ANS_THREE: "",
-        ANS_FOUR: "",
+        ANS_ONE: ANSWERS[QUESTIONS[3]],
+        ANS_TWO: "Prevent any default behaviors from occurring",
+        ANS_THREE: "Prevents the webpage from showing animations no matter what.",
+        ANS_FOUR: "Prevents user from entering input in <input> tags",
     },
     [QUESTIONS[4]]: {
-        ANS_ONE: "",
-        ANS_TWO: "",
-        ANS_THREE: "",
-        ANS_FOUR: "",
+        ANS_ONE: ANSWERS[QUESTIONS[4]],
+        ANS_TWO: "<code>cursor: progress;</code>",
+        ANS_THREE: "<code>cursor: hand;</code>",
+        ANS_FOUR: "<code>cursor: text;</code>",
     },
     [QUESTIONS[5]]: {
-        ANS_ONE: "",
-        ANS_TWO: "",
-        ANS_THREE: "",
-        ANS_FOUR: "",
+        ANS_ONE: ANSWERS[QUESTIONS[5]],
+        ANS_TWO: "Can only have one datatype in the object (string, boolean, number, etc)",
+        ANS_THREE: "Only contains key:value pairings",
+        ANS_FOUR: "Created by using {}",
     },
     [QUESTIONS[6]]: {
-        ANS_ONE: "",
-        ANS_TWO: "",
-        ANS_THREE: "",
-        ANS_FOUR: "",
+        ANS_ONE: ANSWERS[QUESTIONS[6]],
+        ANS_TWO: "<code>git commit -D \"\"</code>",
+        ANS_THREE: "<code>git commit -d \"\"</code>",
+        ANS_FOUR: "<code>git commit -M \"\"</code>",
     },
     [QUESTIONS[7]]: {
-        ANS_ONE: "",
-        ANS_TWO: "",
+        ANS_ONE: ANSWERS[QUESTIONS[7]],
+        ANS_TWO: "True",
         ANS_THREE: "",
         ANS_FOUR: "",
     },
     [QUESTIONS[8]]: {
-        ANS_ONE: "",
-        ANS_TWO: "",
-        ANS_THREE: "",
-        ANS_FOUR: "",
+        ANS_ONE: ANSWERS[QUESTIONS[8]],
+        ANS_TWO: "<code>var myArr = {}</code>",
+        ANS_THREE: "<code>var myArr = <></code>",
+        ANS_FOUR: "<code>var myArr = ()</code>",
     },
     [QUESTIONS[9]]: {
-        ANS_ONE: "",
-        ANS_TWO: "",
-        ANS_THREE: "",
-        ANS_FOUR: "",
+        ANS_ONE: ANSWERS[QUESTIONS[9]],
+        ANS_TWO: "<code>console.print()</code>",
+        ANS_THREE: "<code>console.logger()</code>",
+        ANS_FOUR: "<code>console.show()</code>",
     },
 }
 
@@ -153,15 +153,15 @@ function onAnswerClick(event) {
 
     olEl.children[olEl.children.length - 1].appendChild(resultText);
 
+    if (userAnswer == quizAnswer) {
+        olEl.children[olEl.children.length - 1].children[1].textContent = "Correct!";
+    } else {
+        olEl.children[olEl.children.length - 1].children[1].textContent = "Incorrect";
+    }
+
     // Quickly Show user if they're correct or not
     var resultSeconds = 1;
     var resultTimer = setInterval(() => {
-        if (userAnswer == quizAnswer) {
-            olEl.children[olEl.children.length - 1].children[1].textContent = "Correct!";
-        } else {
-            olEl.children[olEl.children.length - 1].children[1].textContent = "Incorrect";
-        }
-
         if (resultSeconds <= 0) {
             clearInterval(resultTimer);
             olEl.children[olEl.children.length - 1].children[1].textContent = "";
@@ -247,7 +247,8 @@ function getNextQuestion() {
 
     // End game if all questions have been used up
     if (futureIndex >= Object.keys(QUESTIONS).length) {
-        endGame();
+        seconds = 0;
+        timer.innerHTML = "Time: " + seconds;
         return;
     }
 
@@ -262,11 +263,24 @@ function getQuizAnswer() {
 function setupNextQuestion() {
     var question = QUESTIONS[questionIndex]
 
-    h3El.textContent = question
-    li1Button.textContent = MULTIPLE_CHOICE[question].ANS_ONE;
-    li2Button.textContent = MULTIPLE_CHOICE[question].ANS_TWO;
-    li3Button.textContent = MULTIPLE_CHOICE[question].ANS_THREE;
-    li4Button.textContent = MULTIPLE_CHOICE[question].ANS_FOUR;
+    h3El.innerHTML = question
+    li1Button.innerHTML = MULTIPLE_CHOICE[question].ANS_ONE;
+    li2Button.innerHTML = MULTIPLE_CHOICE[question].ANS_TWO;
+    li3Button.innerHTML = MULTIPLE_CHOICE[question].ANS_THREE;
+    li4Button.innerHTML = MULTIPLE_CHOICE[question].ANS_FOUR;
+    
+    console.log(MULTIPLE_CHOICE[question].ANS_THREE.length)
+    if (MULTIPLE_CHOICE[question].ANS_THREE.length <= 0) {
+        li3Button.setAttribute("style", "display: none;");
+    } else {
+        li3Button.setAttribute("style", "display: inherit;");
+    }
+
+    if (MULTIPLE_CHOICE[question].ANS_FOUR.length <= 0) {
+        li4Button.setAttribute("style", "display: none;");
+    } else {
+        li4Button.setAttribute("style", "display: inherit;");
+    }
 }
 
 function initVariables() {

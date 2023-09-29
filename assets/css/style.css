@@ -61,11 +61,12 @@ li {
 li button {
     font-size: 1em;
     margin-bottom: 10px;
-    background-color: var(--main-theme);
+    /* background-color: var(--main-theme); */
     padding: 10px;
     border-radius: var(--border-radius);
     min-width: 30px;
     text-align: center;
     cursor: pointer;
+    text-align: left;
 }
 
