@@ -128,8 +128,8 @@ function startGame(event) {
     
     var gameTimer = setInterval(() => {
         if (seconds === 0) {
-            alert("game over!")
             clearInterval(gameTimer);
+            endGame();
             return;
         }
         seconds--;
@@ -139,7 +139,7 @@ function startGame(event) {
     document.getElementById("title-screen").style.display = "none"; // Hide the title screen when the game starts
     document.getElementById("container-quiz").setAttribute("style", "display: flex; flex-direction: column; margin: 0 auto; text-align: start; width: 70%;")
 
-    setupQuestion();
+    setupNextQuestion();
     olEl.append(li1Answer, li2Answer, li3Answer, li4Answer);
 }
 
@@ -160,6 +160,8 @@ function onAnswerClick(event) {
         handleIncorrectAnswer();
         olEl.children[olEl.children.length - 1].children[1].textContent = "Incorrect";
     }
+
+    getNextQuestion();
 }
 
 // Todo?
@@ -187,6 +189,10 @@ function onAnswerClick(event) {
 // }
 
 /* HELPER FUNCTIONS */
+
+function endGame() {
+    alert("game over!")
+}
 
 function handleCorrectAnswer() {
     userScore += SCORE_INCREASE;
@@ -219,14 +225,27 @@ function handleIncorrectAnswer() {
             timer.style.color = "black";
         }
         penaltySeconds--;
-    }, 800);
+    }, 650);
+}
+
+function getNextQuestion() {
+    var futureIndex = questionIndex + 1;
+
+    // End game if all questions have been used up
+    if (futureIndex >= Object.keys(QUESTIONS).length) {
+        endGame();
+        return;
+    }
+
+    questionIndex++;
+    setupNextQuestion();
 }
 
 function getQuizAnswer() {
     return ANSWERS[QUESTIONS[questionIndex]];
 }
 
-function setupQuestion() {
+function setupNextQuestion() {
     var question = QUESTIONS[questionIndex]
 
     h3El.textContent = question
@@ -241,7 +260,7 @@ function initVariables() {
 
     timer.setAttribute("style", "display: none;");
 
-    console.log(timer)
+    // console.log(Object.keys(QUESTIONS).length)
 
     li1Answer.appendChild(li1Button); // Attach the button to the list item for the user to click
     li2Answer.appendChild(li2Button);
