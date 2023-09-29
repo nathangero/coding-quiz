@@ -130,26 +130,51 @@ function startGame(event) {
 }
 
 function onButtonClick(event) {
-    console.log(event);
-
-    var answer = event.target.innerHTML;
-}
-
-function onKeydownAction(event) {
     // console.log(event);
 
-    var validNums = ["Digit1", "Digit2", "Digit3", "Digit4"];
-    var keyPressed = event.code
+    var userAnswer = event.target.textContent;
+    var quizAnswer = getQuizAnswer();
+    console.log("userAnswer:", userAnswer);
+    console.log("quizAnswer:", quizAnswer);
 
-    // Validate if keypress is valid
-    if (validNums.includes(keyPressed)) {
-        console.log("Valid keypress!")
+    if (userAnswer == quizAnswer) {
+        alert("Correct!");
+    } else {
+        alert("Incorrect. Correct answer is: " + quizAnswer)
     }
+}
+
+// Todo?
+// function onKeydownAction(event) {
+//     console.log(event);
+//     console.log(event.body);
+
+//     var validNums = ["Digit1", "Digit2", "Digit3", "Digit4"];
+//     var keyPressed = event.code
+
+//     // Validate if keypress is valid
+//     if (validNums.includes(keyPressed)) {
+//         console.log("Valid keypress!")
+        
+//         var userAnswer = event.target.textContent;
+//         var quizAnswer = getQuizAnswer();
+//         // console.log("userAnswer:", userAnswer)
+
+//         if (userAnswer == quizAnswer) {
+//             alert("Correct!");
+//         } else {
+//             alert("Incorrect. Correct answer is: " + quizAnswer)
+//         }
+//     }
+// }
+
+function getQuizAnswer() {
+    return ANSWERS[QUESTIONS[questionIndex]];
 }
 
 
 startButton.addEventListener("click", startGame);
-document.addEventListener("keypress", onKeydownAction); // Allow numbers to be used to answer questions
+// document.addEventListener("keypress", onKeydownAction); // Allow numbers to be used to answer questions
 li1Button.addEventListener("click", onButtonClick);
 li2Button.addEventListener("click", onButtonClick);
 li3Button.addEventListener("click", onButtonClick);
