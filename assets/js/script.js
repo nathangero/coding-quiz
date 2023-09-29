@@ -153,15 +153,29 @@ function onAnswerClick(event) {
 
     olEl.children[olEl.children.length - 1].appendChild(resultText);
 
-    if (userAnswer == quizAnswer) {
-        handleCorrectAnswer();
-        olEl.children[olEl.children.length - 1].children[1].textContent = "Correct!";
-    } else {
-        handleIncorrectAnswer();
-        olEl.children[olEl.children.length - 1].children[1].textContent = "Incorrect";
-    }
+    // Quickly Show user if they're correct or not
+    var resultSeconds = 1;
+    var resultTimer = setInterval(() => {
+        if (userAnswer == quizAnswer) {
+            olEl.children[olEl.children.length - 1].children[1].textContent = "Correct!";
+        } else {
+            olEl.children[olEl.children.length - 1].children[1].textContent = "Incorrect";
+        }
 
-    getNextQuestion();
+        if (resultSeconds <= 0) {
+            clearInterval(resultTimer);
+            olEl.children[olEl.children.length - 1].children[1].textContent = "";
+
+            if (userAnswer == quizAnswer) {
+                handleCorrectAnswer();
+            } else {
+                handleIncorrectAnswer();
+            }
+
+            getNextQuestion();
+        }
+        resultSeconds--;
+    }, 500);
 }
 
 // Todo?
