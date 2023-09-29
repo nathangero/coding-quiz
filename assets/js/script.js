@@ -20,7 +20,7 @@ const ANSWERS = {
     [QUESTIONS[0]]: "\" \"",
     [QUESTIONS[1]]: "True",
     [QUESTIONS[2]]: "<code>for (var i = 0; i < 10; i++) {}</code>",
-    [QUESTIONS[3]]: "prevents further propagation of the current event in the capturing and bubbling phases",
+    [QUESTIONS[3]]: "Prevents further propagation of the current event in the capturing and bubbling phases",
     [QUESTIONS[4]]: "<code>cursor: pointer;</code>",
     [QUESTIONS[5]]: "All options are TRUE",
     [QUESTIONS[6]]: "<code>git commit -m \"\"</code>",
@@ -52,7 +52,7 @@ const MULTIPLE_CHOICE = {
         ANS_ONE: ANSWERS[QUESTIONS[3]],
         ANS_TWO: "Prevent any default behaviors from occurring",
         ANS_THREE: "Prevents the webpage from showing animations no matter what.",
-        ANS_FOUR: "Prevents user from entering input in <input> tags",
+        ANS_FOUR: "Prevents user from entering input in < input > tags",
     },
     [QUESTIONS[4]]: {
         ANS_ONE: ANSWERS[QUESTIONS[4]],
@@ -144,10 +144,12 @@ function startGame(event) {
 }
 
 function onAnswerClick(event) {
-    // console.log(event);
+    console.log(event);
 
     var userAnswer = event.target.textContent;
     var quizAnswer = getQuizAnswer();
+
+    console.log("userAnswer:", userAnswer, "| quiz answer:", quizAnswer);
 
     var resultText = document.createElement("h3");
 
@@ -257,7 +259,17 @@ function getNextQuestion() {
 }
 
 function getQuizAnswer() {
-    return ANSWERS[QUESTIONS[questionIndex]];
+    var quizAnswer = ANSWERS[QUESTIONS[questionIndex]]
+    return quizAnswer.includes("<code>") ? removeCodeFromQuizAnswer(quizAnswer) : quizAnswer;
+}
+
+// Remove the <code> tag from the answer
+function removeCodeFromQuizAnswer(textContent) {
+    var split1 = textContent.split("<code>");
+    var split2 = split1[1].split("</code>");
+    var text = split2[0];
+
+    return text;
 }
 
 function setupNextQuestion() {
@@ -269,7 +281,6 @@ function setupNextQuestion() {
     li3Button.innerHTML = MULTIPLE_CHOICE[question].ANS_THREE;
     li4Button.innerHTML = MULTIPLE_CHOICE[question].ANS_FOUR;
     
-    console.log(MULTIPLE_CHOICE[question].ANS_THREE.length)
     if (MULTIPLE_CHOICE[question].ANS_THREE.length <= 0) {
         li3Button.setAttribute("style", "display: none;");
     } else {
