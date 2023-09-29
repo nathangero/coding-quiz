@@ -98,7 +98,6 @@ var subtitle = document.getElementById("subtitle");
 var startButton = document.getElementById("button-start-quiz");
 var quiz = document.getElementById("container-quiz");
 var timer = document.getElementById("timer");
-var penalty = document.createElement("p");
 var h3El = quiz.querySelector("h3");
 var olEl = quiz.querySelector("ol");
 var li1Answer = document.createElement("li"); // Create a list item
@@ -126,7 +125,6 @@ function startGame(event) {
 
     timer.innerHTML = "Time: " + seconds;
     timer.setAttribute("style", "font-size: 30px; margin: 10px auto; border: 2px solid black; border-radius: 10px; padding: 10px;");
-    timer.appendChild(penalty);
     
     var gameTimer = setInterval(() => {
         if (seconds === 0) {
@@ -219,10 +217,9 @@ function handleIncorrectAnswer() {
         if (penaltySeconds === 0) {
             clearInterval(penaltyTimer);
             timer.style.color = "black";
-            penalty.setAttribute("style", "visibility: hidden")
         }
         penaltySeconds--;
-    }, 700);
+    }, 800);
 }
 
 function getQuizAnswer() {
@@ -243,11 +240,8 @@ function initVariables() {
     subtitle.innerHTML = "You'll have 90 seconds to answer all  questions. Getting questions wrong will subtract the time by " + SUBTRACT_TIME + " seconds.<br>Good luck and have fun!";
 
     timer.setAttribute("style", "display: none;");
-    penalty.setAttribute("style", "display: none; color: red;");
-    penalty.textContent = "-" + SUBTRACT_TIME;
 
     console.log(timer)
-    console.log(penalty)
 
     li1Answer.appendChild(li1Button); // Attach the button to the list item for the user to click
     li2Answer.appendChild(li2Button);
