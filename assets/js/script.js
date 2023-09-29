@@ -5,7 +5,7 @@ const SCORE_DECREASE = 10;
 
 const QUESTIONS = {
     0: "String values must be enclosed by a pair of ______",
-    1: "True or False: \n<pre><code>addEventListener(\"click\", runFunction);</code></pre> is valid.",
+    1: "Which of the following is a valid way to setup an event listener?",
     2: "Which is a valid form of a for loop?",
     3: "What does event.stopPropagation() do?",
     4: "Which CSS code changes the mouse cursor into a hand?",
@@ -18,7 +18,7 @@ const QUESTIONS = {
 
 const ANSWERS = {
     [QUESTIONS[0]]: "\" \"",
-    [QUESTIONS[1]]: "True",
+    [QUESTIONS[1]]: "<code>addEventListener(\"click\", runFunction);</code>",
     [QUESTIONS[2]]: "<code>for (var i = 0; i < 10; i++) {}</code>",
     [QUESTIONS[3]]: "Prevents further propagation of the current event in the capturing and bubbling phases",
     [QUESTIONS[4]]: "<code>cursor: pointer;</code>",
@@ -38,9 +38,9 @@ const MULTIPLE_CHOICE = {
     },
     [QUESTIONS[1]]: {
         ANS_ONE: ANSWERS[QUESTIONS[1]],
-        ANS_TWO: "False",
-        ANS_THREE: "",
-        ANS_FOUR: "",
+        ANS_TWO: "<code>addEventListener(\"click\", event);</code>",
+        ANS_THREE: "<code>addEventListener(runFunction);</code>",
+        ANS_FOUR: "<code>doEventListener(\"click\", runFunction);</code>",
     },
     [QUESTIONS[2]]: {
         ANS_ONE: ANSWERS[QUESTIONS[2]],
@@ -121,13 +121,18 @@ var seconds = 90; // Global to adjust when user gets an answer wrong
 /* EVENT LISTENER FUNCTIONS */
 function startGame(event) {
     event.stopPropagation();
-    questionIndex = 0; // Reset to 0 when a new game starts
+
+    // Reset variables when starting a new game
+    userScore = 0;
+    questionIndex = 0;
+    seconds = 90;
 
     timer.innerHTML = "Time: " + seconds;
     timer.setAttribute("style", "font-size: 30px; margin: 10px auto; border: 2px solid black; border-radius: 10px; padding: 10px;");
     
     var gameTimer = setInterval(() => {
         if (seconds === 0) {
+            console.log("timer is done")
             clearInterval(gameTimer);
             endGame();
             return;
@@ -144,21 +149,22 @@ function startGame(event) {
 }
 
 function onAnswerClick(event) {
-    console.log(event);
+    // console.log(event);
 
     var userAnswer = event.target.textContent;
     var quizAnswer = getQuizAnswer();
-
-    console.log("userAnswer:", userAnswer, "| quiz answer:", quizAnswer);
 
     var resultText = document.createElement("h3");
 
     olEl.children[olEl.children.length - 1].appendChild(resultText);
 
-    if (userAnswer == quizAnswer) {
+    if (userAnswer === quizAnswer) {
         olEl.children[olEl.children.length - 1].children[1].textContent = "Correct!";
+        handleCorrectAnswer();
     } else {
         olEl.children[olEl.children.length - 1].children[1].textContent = "Incorrect";
+        handleIncorrectAnswer();
+        showPenalty();
     }
 
     // Quickly Show user if they're correct or not
@@ -167,12 +173,6 @@ function onAnswerClick(event) {
         if (resultSeconds <= 0) {
             clearInterval(resultTimer);
             olEl.children[olEl.children.length - 1].children[1].textContent = "";
-
-            if (userAnswer == quizAnswer) {
-                handleCorrectAnswer();
-            } else {
-                handleIncorrectAnswer();
-            }
 
             getNextQuestion();
         }
@@ -208,6 +208,8 @@ function onAnswerClick(event) {
 
 function endGame() {
     alert("game over!")
+    document.getElementById("title-screen").style.display = "flex";
+    document.getElementById("container-quiz").style.display = "none"
 }
 
 function handleCorrectAnswer() {
@@ -222,17 +224,22 @@ function handleIncorrectAnswer() {
     }
     console.log("user score:", userScore);
 
+    // Check if the timer will go below 0 or not.
     var futureTime = seconds - SUBTRACT_TIME;
     if (futureTime <= 0) {
         seconds = 0;
+        // clearInterval(gameTimer);
         timer.innerHTML = "Time: " + seconds;
         return;
     }
 
-    seconds -= SUBTRACT_TIME; // Penalize the user 
+    seconds = futureTime; // Penalize the user 
     // penalty.style.visibility = "visible";
 
-    
+    console.log("new seconds:", seconds);
+}
+
+function showPenalty() {
     timer.style.color = "red";
     var penaltySeconds = 1; // Show penality for 1 seconds
     var penaltyTimer = setInterval(() => {
@@ -250,6 +257,7 @@ function getNextQuestion() {
     // End game if all questions have been used up
     if (futureIndex >= Object.keys(QUESTIONS).length) {
         seconds = 0;
+        // clearInterval(gameTimer);
         timer.innerHTML = "Time: " + seconds;
         return;
     }
