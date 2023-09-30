@@ -21,3 +21,5 @@ Deployment link is found here: [https://nathangero.github.io/coding-quiz/](https
 [removeChild() docs](https://developer.mozilla.org/en-US/docs/Web/API/Node/removeChild)
 
 [Local Storage docs](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+
+[for...in docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in)

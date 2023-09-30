@@ -32,64 +32,64 @@ const ANSWERS = {
 
 const MULTIPLE_CHOICE = {
     [QUESTIONS[0]]: {
-        ANS_ONE: ANSWERS[QUESTIONS[0]],
-        ANS_TWO: "{ }",
-        ANS_THREE: "( )",
-        ANS_FOUR: "< >",
+        0: ANSWERS[QUESTIONS[0]],
+        1: "{ }",
+        2: "( )",
+        3: "< >",
     },
     [QUESTIONS[1]]: {
-        ANS_ONE: ANSWERS[QUESTIONS[1]],
-        ANS_TWO: "<code>addEventListener(\"click\", event);</code>",
-        ANS_THREE: "<code>addEventListener(runFunction);</code>",
-        ANS_FOUR: "<code>doEventListener(\"click\", runFunction);</code>",
+        0: ANSWERS[QUESTIONS[1]],
+        1: "<code>addEventListener(\"click\", event);</code>",
+        2: "<code>addEventListener(runFunction);</code>",
+        3: "<code>doEventListener(\"click\", runFunction);</code>",
     },
     [QUESTIONS[2]]: {
-        ANS_ONE: ANSWERS[QUESTIONS[2]],
-        ANS_TWO: "<code>for (i < 10; i++) {}</code>",
-        ANS_THREE: "<code>forEach (var i = 0; i < 10; i++) {}</code>",
-        ANS_FOUR: "<code>for (var i = 0: i < 10: i++) {}</code>",
+        0: ANSWERS[QUESTIONS[2]],
+        1: "<code>for (i < 10; i++) {}</code>",
+        2: "<code>forEach (var i = 0; i < 10; i++) {}</code>",
+        3: "<code>for (var i = 0: i < 10: i++) {}</code>",
     },
     [QUESTIONS[3]]: {
-        ANS_ONE: ANSWERS[QUESTIONS[3]],
-        ANS_TWO: "Prevent any default behaviors from occurring",
-        ANS_THREE: "Prevents the webpage from showing animations no matter what.",
-        ANS_FOUR: "Prevents user from entering input in < input > tags",
+        0: ANSWERS[QUESTIONS[3]],
+        1: "Prevent any default behaviors from occurring",
+        2: "Prevents the webpage from showing animations no matter what.",
+        3: "Prevents user from entering input in < input > tags",
     },
     [QUESTIONS[4]]: {
-        ANS_ONE: ANSWERS[QUESTIONS[4]],
-        ANS_TWO: "<code>cursor: progress;</code>",
-        ANS_THREE: "<code>cursor: hand;</code>",
-        ANS_FOUR: "<code>cursor: text;</code>",
+        0: ANSWERS[QUESTIONS[4]],
+        1: "<code>cursor: progress;</code>",
+        2: "<code>cursor: hand;</code>",
+        3: "<code>cursor: text;</code>",
     },
     [QUESTIONS[5]]: {
-        ANS_ONE: ANSWERS[QUESTIONS[5]],
-        ANS_TWO: "Can only have one datatype in the object (string, boolean, number, etc)",
-        ANS_THREE: "Only contains key:value pairings",
-        ANS_FOUR: "Created by using {}",
+        0: ANSWERS[QUESTIONS[5]],
+        1: "Can only have one datatype in the object (string, boolean, number, etc)",
+        2: "Only contains key:value pairings",
+        3: "Created by using {}",
     },
     [QUESTIONS[6]]: {
-        ANS_ONE: ANSWERS[QUESTIONS[6]],
-        ANS_TWO: "<code>git commit -D \"\"</code>",
-        ANS_THREE: "<code>git commit -d \"\"</code>",
-        ANS_FOUR: "<code>git commit -M \"\"</code>",
+        0: ANSWERS[QUESTIONS[6]],
+        1: "<code>git commit -D \"\"</code>",
+        2: "<code>git commit -d \"\"</code>",
+        3: "<code>git commit -M \"\"</code>",
     },
     [QUESTIONS[7]]: {
-        ANS_ONE: ANSWERS[QUESTIONS[7]],
-        ANS_TWO: "True",
-        ANS_THREE: "",
-        ANS_FOUR: "",
+        0: ANSWERS[QUESTIONS[7]],
+        1: "True",
+        2: "",
+        3: "",
     },
     [QUESTIONS[8]]: {
-        ANS_ONE: ANSWERS[QUESTIONS[8]],
-        ANS_TWO: "<code>var myArr = {}</code>",
-        ANS_THREE: "<code>var myArr = <></code>",
-        ANS_FOUR: "<code>var myArr = ()</code>",
+        0: ANSWERS[QUESTIONS[8]],
+        1: "<code>var myArr = {}</code>",
+        2: "<code>var myArr = <></code>",
+        3: "<code>var myArr = ()</code>",
     },
     [QUESTIONS[9]]: {
-        ANS_ONE: ANSWERS[QUESTIONS[9]],
-        ANS_TWO: "<code>console.print()</code>",
-        ANS_THREE: "<code>console.logger()</code>",
-        ANS_FOUR: "<code>console.show()</code>",
+        0: ANSWERS[QUESTIONS[9]],
+        1: "<code>console.print()</code>",
+        2: "<code>console.logger()</code>",
+        3: "<code>console.show()</code>",
     },
 }
 
@@ -106,15 +106,7 @@ var noPlayers = document.createElement("p");
 var quiz = document.getElementById("container-quiz");
 var timer = document.getElementById("timer");
 var quizQuestionText = quiz.querySelector("h3");
-var olEl = quiz.querySelector("ol");
-var li1Answer = document.createElement("li"); // Create a list item
-var li1Button = document.createElement("button"); // Create a button
-var li2Answer = document.createElement("li");
-var li2Button = document.createElement("button");
-var li3Answer = document.createElement("li");
-var li3Button = document.createElement("button");
-var li4Answer = document.createElement("li");
-var li4Button = document.createElement("button");
+var quizAnswerContainer = quiz.querySelector("ol");
 
 var gameEndScreen = document.getElementById("container-game-over");
 var userScoreText = document.getElementById("user-score");
@@ -134,7 +126,7 @@ function startGame(event) {
 
     // Reset variables when starting a new game
     userScore = 0;
-    questionIndex = 9;
+    questionIndex = 8;
     seconds = 90;
 
     timer.innerHTML = "Time: " + seconds;
@@ -155,25 +147,29 @@ function startGame(event) {
     quiz.setAttribute("style", "display: flex; flex-direction: column; margin: 0 auto; text-align: start; width: 70%;")
 
     setupNextQuestion();
-    olEl.append(li1Answer, li2Answer, li3Answer, li4Answer);
 }
 
 function onAnswerClick(event) {
     // console.log(event);
+    console.log("@onAnswerClick");
 
-    // TODO: toggleAttribute() ON CLICK
+    // Disables all the answer buttons to avoid cheating the score.
+    for (var i = 0; i < quizAnswerContainer.children.length; i++) {
+        quizAnswerContainer.children[i].children[0].toggleAttribute("disabled");
+    }
+
     var userAnswer = event.target.textContent;
     var quizAnswer = getQuizAnswer();
 
     var resultText = document.createElement("h3");
 
-    olEl.children[olEl.children.length - 1].appendChild(resultText);
+    quizAnswerContainer.children[quizAnswerContainer.children.length - 1].appendChild(resultText);
 
     if (userAnswer === quizAnswer) {
-        olEl.children[olEl.children.length - 1].children[1].textContent = "Correct!";
+        quizAnswerContainer.children[quizAnswerContainer.children.length - 1].children[1].textContent = "Correct!";
         handleCorrectAnswer();
     } else {
-        olEl.children[olEl.children.length - 1].children[1].textContent = "Incorrect";
+        quizAnswerContainer.children[quizAnswerContainer.children.length - 1].children[1].textContent = "Incorrect";
         handleIncorrectAnswer();
         showPenalty();
     }
@@ -183,7 +179,7 @@ function onAnswerClick(event) {
     var resultTimer = setInterval(() => {
         if (resultSeconds <= 0) {
             clearInterval(resultTimer);
-            olEl.children[olEl.children.length - 1].children[1].textContent = "";
+            quizAnswerContainer.children[quizAnswerContainer.children.length - 1].children[1].textContent = "";
 
             getNextQuestion();
         }
@@ -308,21 +304,23 @@ function setupNextQuestion() {
     var question = QUESTIONS[questionIndex]
 
     quizQuestionText.innerHTML = question
-    li1Button.innerHTML = MULTIPLE_CHOICE[question].ANS_ONE;
-    li2Button.innerHTML = MULTIPLE_CHOICE[question].ANS_TWO;
-    li3Button.innerHTML = MULTIPLE_CHOICE[question].ANS_THREE;
-    li4Button.innerHTML = MULTIPLE_CHOICE[question].ANS_FOUR;
-    
-    if (MULTIPLE_CHOICE[question].ANS_THREE.length <= 0) {
-        li3Button.setAttribute("style", "display: none;");
-    } else {
-        li3Button.setAttribute("style", "display: inherit;");
-    }
+    quizAnswerContainer.innerHTML = ""; // Erase the choices
 
-    if (MULTIPLE_CHOICE[question].ANS_FOUR.length <= 0) {
-        li4Button.setAttribute("style", "display: none;");
-    } else {
-        li4Button.setAttribute("style", "display: inherit;");
+    for (var i = 0; i < Object.keys(MULTIPLE_CHOICE[question]).length; i++) {
+        var answer = MULTIPLE_CHOICE[question][i];
+        if (answer === "") { // If the answer is empty, skip it
+            continue;
+        }
+
+        var liButton = document.createElement("button");
+        liButton.innerHTML = answer;
+        liButton.addEventListener("click", onAnswerClick); // Add on click listener
+
+        var li = document.createElement("li");
+        li.appendChild(liButton);
+        li.setAttribute("data-index", i);
+    
+        quizAnswerContainer.appendChild(li);
     }
 }
 
@@ -371,13 +369,6 @@ function initVariables() {
 
     timer.setAttribute("style", "display: none;");
 
-    // console.log(Object.keys(QUESTIONS).length)
-
-    li1Answer.appendChild(li1Button); // Attach the button to the list item for the user to click
-    li2Answer.appendChild(li2Button);
-    li3Answer.appendChild(li3Button);
-    li4Answer.appendChild(li4Button);
-
     initHighScores();
 }
 
@@ -385,9 +376,5 @@ function initVariables() {
 /* RUN ON SITE STARTUP */
 initVariables();
 startButton.addEventListener("click", startGame);
-// document.addEventListener("keypress", onKeydownAction); // Allow numbers to be used to answer questions
-li1Button.addEventListener("click", onAnswerClick);
-li2Button.addEventListener("click", onAnswerClick);
-li3Button.addEventListener("click", onAnswerClick);
-li4Button.addEventListener("click", onAnswerClick);
 submitButton.addEventListener("click", onSubmitClick);
+// document.addEventListener("keypress", onKeydownAction); // Allow numbers to be used to answer questions
