@@ -337,11 +337,14 @@ function randomizeAnswerChoice(question) {
 
 // Sort the highscores by highest score
 function sortScoresDescending(scores) {
-    console.log("scores:", scores)
+    var sortedScores = Object.keys(scores)
+    .sort((a, b) => scores[b] - scores[a]) // Sort value descending
+    .reduce((acc, cur) => { // Put the new sorting into an object.
+        acc[cur] = scores[cur]
+        return acc
+    }, {})
 
-
-
-    return scores;
+    return sortedScores;
 }
 
 // Get local storage high scores

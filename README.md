@@ -12,6 +12,8 @@ Deployment link is found here: [https://nathangero.github.io/coding-quiz/](https
 
 [Dynamically add scores](https://git.bootcampcontent.com/University-of-California---Berkeley/UCB-VIRT-FSF-FT-09-2023-U-LOLC/-/blob/main/course-content/04-Web-APIs/activities/26-Stu_Local-Storage-Todos/Unsolved/assets/js/script.js)
 
+[Sorting object by its values](https://codereview.stackexchange.com/a/245007)
+
 ### Resources
 
 [stopPropagation() definition](https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation)
