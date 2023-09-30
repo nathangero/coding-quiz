@@ -25,3 +25,5 @@ Deployment link is found here: [https://nathangero.github.io/coding-quiz/](https
 [for...in docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in)
 
 [Deep copy objects docs](https://developer.mozilla.org/en-US/docs/Glossary/Deep_copy)
+
+[Force uppercase docs](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform)

@@ -153,7 +153,6 @@ function startGame(event) {
 
 function onAnswerClick(event) {
     // console.log(event);
-    console.log("@onAnswerClick");
 
     // Disables all the answer buttons to avoid cheating the score.
     for (var i = 0; i < quizAnswerContainer.children.length; i++) {
@@ -193,13 +192,17 @@ function onSubmitClick(event) {
     event.stopPropagation();
     event.preventDefault();
 
+    // Give default initials if empty
+    var initials = (usersInitialsText.value === "") ? "AAA" : usersInitialsText.value;
+
+    highScores[initials] = userScore;
+    localStorage.setItem(STORE_KEY_HIGHSCORES, JSON.stringify(highScores));
+    initHighScores();
+    usersInitialsText.innerHTML = ""; 
+
     gameEndScreen.style.display = "none";
     titleScreen.style.display = "flex";
     scoreboard.style.display = "flex";
-
-    highScores[usersInitialsText.value] = userScore;
-    localStorage.setItem(STORE_KEY_HIGHSCORES, JSON.stringify(highScores));
-    initHighScores();
 }
 
 // Todo?
@@ -252,8 +255,6 @@ function handleIncorrectAnswer() {
 
     seconds = futureTime; // Penalize the user 
     // penalty.style.visibility = "visible";
-
-    console.log("new seconds:", seconds);
 }
 
 function showPenalty() {
@@ -283,6 +284,7 @@ function removeCodeFromQuizAnswer(textContent) {
 }
 
 function setupNextQuestion() {
+    // Randomize the question order
     var questionsLength = Object.keys(questionsDeepCopy).length
     var randomIndex = (questionsLength > 0) ? Math.floor(Math.random() * questionsLength) : 0; // If only one question is left, pick the first question
     questionIndex = Object.keys(questionsDeepCopy)[randomIndex];
@@ -335,6 +337,9 @@ function randomizeAnswerChoice(question) {
 
 // Sort the highscores by highest score
 function sortScoresDescending(scores) {
+    console.log("scores:", scores)
+
+
 
     return scores;
 }
@@ -342,7 +347,6 @@ function sortScoresDescending(scores) {
 // Get local storage high scores
 function initHighScores() {
     var localScores = JSON.parse(localStorage.getItem(STORE_KEY_HIGHSCORES));
-    console.log("localScores:", localScores);
 
     if (localScores) { 
         highScores = sortScoresDescending(localScores);
