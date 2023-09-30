@@ -1,7 +1,7 @@
 /* CONST VARIABLES */
 const SUBTRACT_TIME = 10;
 const SCORE_INCREASE = 10;
-const SCORE_DECREASE = 10;
+const SCORE_TIME_BONUS = 0.8;
 const STORE_KEY_HIGHSCORES = "highScores"
 
 const QUESTIONS = {
@@ -145,6 +145,7 @@ function startGame(event) {
     titleScreen.style.display = "none"; // Hide the title screen when the game starts
     scoreboard.style.display = "none";
     quiz.setAttribute("style", "display: flex; flex-direction: column; margin: 0 auto; text-align: start; width: 70%;")
+    document.querySelector("main").style.width = "50%";
 
     setupNextQuestion();
 }
@@ -227,9 +228,11 @@ function onSubmitClick(event) {
 /* HELPER FUNCTIONS */
 
 function endGame() {
+    userScore += Math.floor(secondsRemaining * SCORE_TIME_BONUS); // add time bonus to score
     gameEndScreen.style.display = "flex";
     quiz.style.display = "none";
-    userScoreText.textContent = "You scored: " + userScore + " / " + (SCORE_INCREASE * Object.keys(QUESTIONS).length);
+    document.querySelector("main").style.width = "fit-content";
+    userScoreText.textContent = "You scored: " + userScore;
 }
 
 function handleCorrectAnswer() {
@@ -238,17 +241,11 @@ function handleCorrectAnswer() {
 }
 
 function handleIncorrectAnswer() {
-    var futureScore = userScore - SCORE_DECREASE;
-    if (futureScore >= 0) { // Check if the user's score will go below 0 or not
-        userScore = futureScore;
-    }
-    console.log("user score:", userScore);
-
     // Check if the timer will go below 0 or not.
     var futureTime = seconds - SUBTRACT_TIME;
     if (futureTime <= 0) {
+        secondsRemaining = seconds;
         seconds = 0;
-        // clearInterval(gameTimer);
         timer.innerHTML = "Time: " + seconds;
         return;
     }
@@ -276,6 +273,7 @@ function getNextQuestion() {
 
     // End game if all questions have been used up
     if (futureIndex >= Object.keys(QUESTIONS).length) {
+        secondsRemaining = seconds;
         seconds = 0;
         // clearInterval(gameTimer);
         timer.innerHTML = "Time: " + seconds;
@@ -306,8 +304,16 @@ function setupNextQuestion() {
     quizQuestionText.innerHTML = question
     quizAnswerContainer.innerHTML = ""; // Erase the choices
 
+    var answersDeepCopy = JSON.parse(JSON.stringify(MULTIPLE_CHOICE[question])); // Make a copy of the multiple choice answers
+    var answersLength = Object.keys(answersDeepCopy).length;
+
     for (var i = 0; i < Object.keys(MULTIPLE_CHOICE[question]).length; i++) {
-        var answer = MULTIPLE_CHOICE[question][i];
+        var randomIndex = (answersLength > 0) ? Math.floor(Math.random() * answersLength) : 0; // If only one answer is left, pick the first answer
+        var questionKey = Object.keys(answersDeepCopy)[randomIndex];
+        var answer = answersDeepCopy[questionKey];
+        delete answersDeepCopy[questionKey]; // Delete answer used to prevent duplicates
+        answersLength = Object.keys(answersDeepCopy).length; // Update so Math.random() doesn't go out of bounds
+
         if (answer === "") { // If the answer is empty, skip it
             continue;
         }
