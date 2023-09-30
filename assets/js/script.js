@@ -98,24 +98,27 @@ const MULTIPLE_CHOICE = {
 var subtitle = document.getElementById("subtitle");
 var titleScreen = document.getElementById("title-screen");
 var startButton = document.getElementById("button-start-quiz");
+
+var scoreboard = document.getElementById("scoreboard");
+var playersList = scoreboard.querySelector("ol");
+var noPlayers = document.createElement("p");
+
 var quiz = document.getElementById("container-quiz");
 var timer = document.getElementById("timer");
-var h3El = quiz.querySelector("h3");
+var quizQuestionText = quiz.querySelector("h3");
 var olEl = quiz.querySelector("ol");
 var li1Answer = document.createElement("li"); // Create a list item
 var li1Button = document.createElement("button"); // Create a button
-
 var li2Answer = document.createElement("li");
 var li2Button = document.createElement("button");
-
 var li3Answer = document.createElement("li");
 var li3Button = document.createElement("button");
-
 var li4Answer = document.createElement("li");
 var li4Button = document.createElement("button");
 
 var gameEndScreen = document.getElementById("container-game-over");
 var userScoreText = document.getElementById("user-score");
+var usersInitialsText = document.getElementById("usersInitials");
 var submitButton = gameEndScreen.querySelector("button");
 
 /* GLOBAL VARIABLES */
@@ -130,7 +133,7 @@ function startGame(event) {
 
     // Reset variables when starting a new game
     userScore = 0;
-    questionIndex = 0;
+    questionIndex = 9;
     seconds = 90;
 
     timer.innerHTML = "Time: " + seconds;
@@ -146,8 +149,9 @@ function startGame(event) {
         timer.innerHTML = "Time: " + seconds;
     }, 1000);
 
-    document.getElementById("title-screen").style.display = "none"; // Hide the title screen when the game starts
-    document.getElementById("container-quiz").setAttribute("style", "display: flex; flex-direction: column; margin: 0 auto; text-align: start; width: 70%;")
+    titleScreen.style.display = "none"; // Hide the title screen when the game starts
+    scoreboard.style.display = "none";
+    quiz.setAttribute("style", "display: flex; flex-direction: column; margin: 0 auto; text-align: start; width: 70%;")
 
     setupNextQuestion();
     olEl.append(li1Answer, li2Answer, li3Answer, li4Answer);
@@ -192,6 +196,11 @@ function onSubmitClick(event) {
 
     gameEndScreen.style.display = "none";
     titleScreen.style.display = "flex";
+    scoreboard.style.display = "flex";
+
+    highScores[usersInitialsText.value] = userScore;
+    localStorage.setItem(STORE_KEY_HIGHSCORES, JSON.stringify(highScores));
+    initHighScores();
 }
 
 // Todo?
@@ -297,7 +306,7 @@ function removeCodeFromQuizAnswer(textContent) {
 function setupNextQuestion() {
     var question = QUESTIONS[questionIndex]
 
-    h3El.innerHTML = question
+    quizQuestionText.innerHTML = question
     li1Button.innerHTML = MULTIPLE_CHOICE[question].ANS_ONE;
     li2Button.innerHTML = MULTIPLE_CHOICE[question].ANS_TWO;
     li3Button.innerHTML = MULTIPLE_CHOICE[question].ANS_THREE;
@@ -316,17 +325,49 @@ function setupNextQuestion() {
     }
 }
 
+// Sort the highscores by highest score
+function sortScoresDescending(scores) {
+    return scores;
+}
 
 // Get local storage high scores
 function initHighScores() {
     var localScores = JSON.parse(localStorage.getItem(STORE_KEY_HIGHSCORES));
+    console.log("localScores:", localScores)
     if (localScores) { 
-        highScores = localScores;
+        console.log("playersList:", playersList)
+        highScores = sortScoresDescending(localScores);
+
+        // Remove if the "no highs scores yet" was there before
+        if (scoreboard.children[0].matches("p")) {
+            scoreboard.children[0].remove();
+        }
+
+        playersList.innerHTML = "" // Reset he scoreboard before editing it
+
+        var index = 0;
+        for (const playerInitials in highScores) {
+            console.log("playerInitials:", playerInitials)
+            var li = document.createElement("li");
+            li.textContent = playerInitials + ": " + highScores[playerInitials];
+            li.setAttribute("data-index", index);
+            li.setAttribute("style", "")
+        
+            playersList.appendChild(li);
+        }
+        console.log("playersList:", playersList)
+
+    } else {
+        console.log("no high scores to be had")
+        noPlayers = document.createElement("p");
+        noPlayers.textContent = "No high scores yet";
+        noPlayers.setAttribute("style", "font-size: 35px; margin: 0 auto; align-items: center;")
+        scoreboard.appendChild(noPlayers);
     }
 }
 
 function initVariables() {
-    subtitle.innerHTML = "You'll have 90 seconds to answer all  questions. Getting questions wrong will subtract the time by " + SUBTRACT_TIME + " seconds.<br>Good luck and have fun!";
+    subtitle.innerHTML = "You'll have 90 seconds to answer all  questions. Getting questions wrong will subtract the time by " + SUBTRACT_TIME + " seconds.<br><br>Good luck and have fun!";
 
     timer.setAttribute("style", "display: none;");
 

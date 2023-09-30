@@ -87,10 +87,15 @@ li button {
     border-radius: var(--border-radius);
 }
 
-.scoreboard {
+#scoreboard {
     display: flex;
     flex-direction: column;
-    margin: 10px auto;
+    margin: 0 20px;
+    flex: 0 1 400px;
+}
+
+#scoreboard h3 {
+    margin: 0;
 }
 
 #container-game-over {
