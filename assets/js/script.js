@@ -130,7 +130,7 @@ function startGame(event) {
 
     // Reset variables when starting a new game
     userScore = 0;
-    questionIndex = 9;
+    questionIndex = 0;
     seconds = 90;
 
     timer.innerHTML = "Time: " + seconds;

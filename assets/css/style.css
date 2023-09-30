@@ -13,6 +13,8 @@ body {
 
 main {
     background-color: beige;
+    width: fit-content;
+    margin: auto auto;
 }
 
 h1 {
@@ -83,6 +85,12 @@ li button {
     width: 30%;
     padding: 5px;
     border-radius: var(--border-radius);
+}
+
+.scoreboard {
+    display: flex;
+    flex-direction: column;
+    margin: 10px auto;
 }
 
 #container-game-over {
