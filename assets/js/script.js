@@ -12,7 +12,7 @@ const QUESTIONS = {
     4: "Which CSS code changes the mouse cursor into a hand?",
     5: "Which is not true about a JavaScript Object?",
     6: "Which git command allows the user to add a comment to the commit?",
-    7: "True or False: Linking JavaScript files in the HTML goes under the <head> tag",
+    7: "True or False: Linking JavaScript files in the HTML goes under the < head > tag",
     8: "Which below will create a JavaScript array?",
     9: "Which is the correct way to debug JavaScript in order to print to the console?"
 }
@@ -116,6 +116,7 @@ var submitButton = gameEndScreen.querySelector("button");
 /* GLOBAL VARIABLES */
 var userScore = 0;
 var questionIndex = 0;
+var questionsDeepCopy = JSON.parse(JSON.stringify(QUESTIONS)); // Make a copy of the questions
 var seconds = 90; // Global to adjust when user gets an answer wrong
 var secondsRemaining = 0; // Use to calculate user's final score
 var highScores = {};
@@ -125,8 +126,8 @@ function startGame(event) {
     event.stopPropagation();
 
     // Reset variables when starting a new game
+    questionsDeepCopy = JSON.parse(JSON.stringify(QUESTIONS));
     userScore = 0;
-    questionIndex = 8;
     seconds = 90;
 
     timer.innerHTML = "Time: " + seconds;
@@ -182,7 +183,7 @@ function onAnswerClick(event) {
             clearInterval(resultTimer);
             quizAnswerContainer.children[quizAnswerContainer.children.length - 1].children[1].textContent = "";
 
-            getNextQuestion();
+            setupNextQuestion();
         }
         resultSeconds--;
     }, 500);
@@ -237,7 +238,6 @@ function endGame() {
 
 function handleCorrectAnswer() {
     userScore += SCORE_INCREASE;
-    console.log("user score:", userScore);
 }
 
 function handleIncorrectAnswer() {
@@ -268,22 +268,6 @@ function showPenalty() {
     }, 650);
 }
 
-function getNextQuestion() {
-    var futureIndex = questionIndex + 1;
-
-    // End game if all questions have been used up
-    if (futureIndex >= Object.keys(QUESTIONS).length) {
-        secondsRemaining = seconds;
-        seconds = 0;
-        // clearInterval(gameTimer);
-        timer.innerHTML = "Time: " + seconds;
-        return;
-    }
-
-    questionIndex++;
-    setupNextQuestion();
-}
-
 function getQuizAnswer() {
     var quizAnswer = ANSWERS[QUESTIONS[questionIndex]]
     return quizAnswer.includes("<code>") ? removeCodeFromQuizAnswer(quizAnswer) : quizAnswer;
@@ -299,11 +283,30 @@ function removeCodeFromQuizAnswer(textContent) {
 }
 
 function setupNextQuestion() {
-    var question = QUESTIONS[questionIndex]
+    var questionsLength = Object.keys(questionsDeepCopy).length
+    var randomIndex = (questionsLength > 0) ? Math.floor(Math.random() * questionsLength) : 0; // If only one question is left, pick the first question
+    questionIndex = Object.keys(questionsDeepCopy)[randomIndex];
+    var question = questionsDeepCopy[questionIndex];
+    delete questionsDeepCopy[questionIndex]; // Delete question used to prevent duplicates
 
-    quizQuestionText.innerHTML = question
+
+    // End game if all questions have been used up
+    if (questionsLength === 0) {
+        secondsRemaining = seconds;
+        seconds = 0;
+        // clearInterval(gameTimer);
+        timer.innerHTML = "Time: " + seconds;
+        return;
+    }
+
+    questionsLength = Object.keys(questionsLength).length; // Update so Math.random() doesn't go out of bounds
+    quizQuestionText.innerHTML = question;
     quizAnswerContainer.innerHTML = ""; // Erase the choices
 
+    randomizeAnswerChoice(question);
+}
+
+function randomizeAnswerChoice(question) {
     var answersDeepCopy = JSON.parse(JSON.stringify(MULTIPLE_CHOICE[question])); // Make a copy of the multiple choice answers
     var answersLength = Object.keys(answersDeepCopy).length;
 
