@@ -2,6 +2,7 @@
 const SUBTRACT_TIME = 10;
 const SCORE_INCREASE = 10;
 const SCORE_DECREASE = 10;
+const STORE_KEY_HIGHSCORES = "highScores"
 
 const QUESTIONS = {
     0: "String values must be enclosed by a pair of ______",
@@ -95,6 +96,7 @@ const MULTIPLE_CHOICE = {
 
 /* DOM VARIABLES */
 var subtitle = document.getElementById("subtitle");
+var titleScreen = document.getElementById("title-screen");
 var startButton = document.getElementById("button-start-quiz");
 var quiz = document.getElementById("container-quiz");
 var timer = document.getElementById("timer");
@@ -112,11 +114,15 @@ var li3Button = document.createElement("button");
 var li4Answer = document.createElement("li");
 var li4Button = document.createElement("button");
 
+var gameEndScreen = document.getElementById("container-game-over");
+var userScoreText = document.getElementById("user-score");
+var submitButton = gameEndScreen.querySelector("button");
 
 /* GLOBAL VARIABLES */
 var userScore = 0;
 var questionIndex = 0;
 var seconds = 90; // Global to adjust when user gets an answer wrong
+var highScores = {};
 
 /* EVENT LISTENER FUNCTIONS */
 function startGame(event) {
@@ -124,7 +130,7 @@ function startGame(event) {
 
     // Reset variables when starting a new game
     userScore = 0;
-    questionIndex = 0;
+    questionIndex = 9;
     seconds = 90;
 
     timer.innerHTML = "Time: " + seconds;
@@ -132,7 +138,6 @@ function startGame(event) {
     
     var gameTimer = setInterval(() => {
         if (seconds === 0) {
-            console.log("timer is done")
             clearInterval(gameTimer);
             endGame();
             return;
@@ -151,6 +156,7 @@ function startGame(event) {
 function onAnswerClick(event) {
     // console.log(event);
 
+    // TODO: toggleAttribute() ON CLICK
     var userAnswer = event.target.textContent;
     var quizAnswer = getQuizAnswer();
 
@@ -180,6 +186,14 @@ function onAnswerClick(event) {
     }, 500);
 }
 
+function onSubmitClick(event) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    gameEndScreen.style.display = "none";
+    titleScreen.style.display = "flex";
+}
+
 // Todo?
 // function onKeydownAction(event) {
 //     console.log(event);
@@ -207,9 +221,9 @@ function onAnswerClick(event) {
 /* HELPER FUNCTIONS */
 
 function endGame() {
-    alert("game over!")
-    document.getElementById("title-screen").style.display = "flex";
-    document.getElementById("container-quiz").style.display = "none"
+    gameEndScreen.style.display = "flex";
+    quiz.style.display = "none";
+    userScoreText.textContent = "You scored: " + userScore + " / " + (SCORE_INCREASE * Object.keys(QUESTIONS).length);
 }
 
 function handleCorrectAnswer() {
@@ -302,6 +316,15 @@ function setupNextQuestion() {
     }
 }
 
+
+// Get local storage high scores
+function initHighScores() {
+    var localScores = JSON.parse(localStorage.getItem(STORE_KEY_HIGHSCORES));
+    if (localScores) { 
+        highScores = localScores;
+    }
+}
+
 function initVariables() {
     subtitle.innerHTML = "You'll have 90 seconds to answer all  questions. Getting questions wrong will subtract the time by " + SUBTRACT_TIME + " seconds.<br>Good luck and have fun!";
 
@@ -313,6 +336,8 @@ function initVariables() {
     li2Answer.appendChild(li2Button);
     li3Answer.appendChild(li3Button);
     li4Answer.appendChild(li4Button);
+
+    initHighScores();
 }
 
 
@@ -324,3 +349,4 @@ li1Button.addEventListener("click", onAnswerClick);
 li2Button.addEventListener("click", onAnswerClick);
 li3Button.addEventListener("click", onAnswerClick);
 li4Button.addEventListener("click", onAnswerClick);
+submitButton.addEventListener("click", onSubmitClick);

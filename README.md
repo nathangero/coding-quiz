@@ -11,3 +11,7 @@ Deployment link is found here: [https://nathangero.github.io/coding-quiz/](https
 ### Resources
 
 [stopPropagation() definition](https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation)
+
+[toggleAttribute() docs](https://developer.mozilla.org/en-US/docs/Web/API/Element/toggleAttribute)
+
+[Local Storage docs](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)

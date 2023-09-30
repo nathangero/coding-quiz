@@ -27,6 +27,7 @@ h2 {
 
 h3 {
     font-size: 2em;
+    text-align: center;
 }
 
 header {
@@ -70,3 +71,27 @@ li button {
     text-align: left;
 }
 
+.user-input {
+    display: flex;
+    justify-content: space-evenly;
+    width: auto;
+    margin: 10px;
+}
+
+.user-input input {
+    font-size: 25px;
+    width: 30%;
+    padding: 5px;
+    border-radius: var(--border-radius);
+}
+
+#container-game-over {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+}
+
+#container-game-over p {
+    font-size: 2.5em;
+    margin: 10px;
+}
