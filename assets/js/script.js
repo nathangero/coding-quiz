@@ -125,6 +125,7 @@ var submitButton = gameEndScreen.querySelector("button");
 var userScore = 0;
 var questionIndex = 0;
 var seconds = 90; // Global to adjust when user gets an answer wrong
+var secondsRemaining = 0; // Use to calculate user's final score
 var highScores = {};
 
 /* EVENT LISTENER FUNCTIONS */
@@ -327,35 +328,34 @@ function setupNextQuestion() {
 
 // Sort the highscores by highest score
 function sortScoresDescending(scores) {
+
     return scores;
 }
 
 // Get local storage high scores
 function initHighScores() {
     var localScores = JSON.parse(localStorage.getItem(STORE_KEY_HIGHSCORES));
-    console.log("localScores:", localScores)
+    console.log("localScores:", localScores);
+
     if (localScores) { 
-        console.log("playersList:", playersList)
         highScores = sortScoresDescending(localScores);
 
         // Remove if the "no highs scores yet" was there before
-        if (scoreboard.children[0].matches("p")) {
-            scoreboard.children[0].remove();
+        if (scoreboard.children[2]) {
+            scoreboard.children[2].remove();
         }
 
         playersList.innerHTML = "" // Reset he scoreboard before editing it
 
         var index = 0;
         for (const playerInitials in highScores) {
-            console.log("playerInitials:", playerInitials)
             var li = document.createElement("li");
             li.textContent = playerInitials + ": " + highScores[playerInitials];
             li.setAttribute("data-index", index);
-            li.setAttribute("style", "")
         
             playersList.appendChild(li);
+            index++;
         }
-        console.log("playersList:", playersList)
 
     } else {
         console.log("no high scores to be had")

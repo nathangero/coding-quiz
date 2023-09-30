@@ -14,7 +14,7 @@ body {
 main {
     background-color: beige;
     width: fit-content;
-    margin: auto auto;
+    margin: 10px auto;
 }
 
 h1 {
@@ -90,7 +90,7 @@ li button {
 #scoreboard {
     display: flex;
     flex-direction: column;
-    margin: 0 20px;
+    margin: 10px 20px;
     flex: 0 1 400px;
 }
 
